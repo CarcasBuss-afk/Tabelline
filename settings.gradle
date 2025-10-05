@@ -1,0 +1,2 @@
+rootProject.name = "Tabelline"
+include ':app'
