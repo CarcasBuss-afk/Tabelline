@@ -35,10 +35,10 @@ public class MainActivity extends Activity
         mainLayout.setOrientation(LinearLayout.VERTICAL);
         mainLayout.setBackgroundColor(Color.parseColor("#1A1A2E"));
 
-        // Usa PERCENTUALI REALI dello schermo
-        int keyboardHeight = (int) (screenHeight * 0.25);   // 25% per tastiera
-        int displayHeight = (int) (screenHeight * 0.05);    // 5% per display
+        // PASSO 1: Dividi schermo in 3 sezioni con percentuali
         int gameViewHeight = (int) (screenHeight * 0.70);   // 70% per gioco
+        int displayHeight = (int) (screenHeight * 0.05);    // 5% per display
+        int keyboardHeight = (int) (screenHeight * 0.25);   // 25% per tastiera
 
         // 1. GameView (altezza dinamica = resto dello spazio)
         gameView = new GameView(this, screenWidth, gameViewHeight, this);
@@ -49,10 +49,11 @@ public class MainActivity extends Activity
         gameView.setLayoutParams(gameParams);
         mainLayout.addView(gameView);
 
-        // 2. Input Display (altezza fissa 100px)
+        // 2. Input Display
         inputDisplay = new TextView(this);
         inputDisplay.setText("_");
-        inputDisplay.setTextSize(32);
+        // Font size = 60% dell'altezza del display
+        inputDisplay.setTextSize(0, displayHeight * 0.6f);
         inputDisplay.setTextColor(Color.WHITE);
         inputDisplay.setGravity(Gravity.CENTER);
         inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));

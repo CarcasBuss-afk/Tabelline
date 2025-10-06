@@ -34,16 +34,23 @@ public class KeyboardView extends LinearLayout {
         grid.setRowCount(4);
         grid.setColumnCount(3);
 
-        int padding = 20;
+        // PASSO 2: Calcola dimensioni interne come % dello spazio tastiera
+        int padding = (int) (Math.min(width, height) * 0.03);  // 3% del lato più piccolo
         grid.setPadding(padding, padding, padding, padding);
 
-        // Calcola dimensioni tasti in base allo spazio disponibile
-        int totalWidth = width - (padding * 2);
-        int totalHeight = height - (padding * 2);
+        // Spazio utilizzabile dopo padding
+        int usableWidth = width - (padding * 2);
+        int usableHeight = height - (padding * 2);
 
-        int buttonWidth = (totalWidth / 3) - 16;   // 3 colonne
-        int buttonHeight = (totalHeight / 4) - 16; // 4 righe
-        int margin = 8;
+        // Ogni pulsante occupa 1/3 della larghezza e 1/4 dell'altezza
+        // Lasciamo margini tra i pulsanti (2% dello spazio)
+        int marginPercent = 2;
+        int totalMarginWidth = (int) (usableWidth * marginPercent / 100.0);
+        int totalMarginHeight = (int) (usableHeight * marginPercent / 100.0);
+
+        int buttonWidth = (usableWidth / 3) - totalMarginWidth;
+        int buttonHeight = (usableHeight / 4) - totalMarginHeight;
+        int margin = totalMarginWidth / 6;  // Diviso equamente tra i margini
 
         // Layout tasti:
         // 1 2 3
@@ -83,19 +90,23 @@ public class KeyboardView extends LinearLayout {
         params.setMargins(margin, margin, margin, margin);
         btn.setLayoutParams(params);
 
+        // PASSO 3: Font size = 40% dell'altezza del pulsante
+        float textSize = height * 0.4f;
+
         if (key == -1) {
             // Tasto RESET
             btn.setText("⌫");
-            btn.setTextSize(32);
+            btn.setTextSize(0, textSize);  // 0 = px assoluti
             btn.setBackgroundColor(Color.parseColor("#E74C3C"));
         } else {
             // Tasti numerici
             btn.setText(String.valueOf(key));
-            btn.setTextSize(28);
+            btn.setTextSize(0, textSize);  // 0 = px assoluti
             btn.setBackgroundColor(Color.parseColor("#3498DB"));
         }
 
         btn.setTextColor(Color.WHITE);
+        btn.setPadding(0, 0, 0, 0);  // Rimuovi padding interno per massimizzare spazio
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
