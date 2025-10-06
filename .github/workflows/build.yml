@@ -28,8 +28,19 @@ jobs:
     - name: Build with Gradle
       run: gradle assembleRelease
 
+    - name: Sign APK
+      run: |
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release-key.jks
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+          -keystore release-key.jks \
+          -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
+          -keypass ${{ secrets.KEYSTORE_PASSWORD }} \
+          app/build/outputs/apk/release/app-release-unsigned.apk \
+          ${{ secrets.KEY_ALIAS }}
+        mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/tabelline-signed.apk
+
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: tabelline-release
-        path: app/build/outputs/apk/release/app-release-unsigned.apk
+        path: app/build/outputs/apk/release/tabelline-signed.apk
