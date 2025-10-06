@@ -29,20 +29,16 @@ public class MainActivity extends Activity
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int screenWidth = metrics.widthPixels;
         int screenHeight = metrics.heightPixels;
-        float density = metrics.density; // Fattore di densità (1.0 = mdpi, 2.0 = xhdpi, 3.0 = xxhdpi)
 
         // Layout principale verticale
         LinearLayout mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
         mainLayout.setBackgroundColor(Color.parseColor("#1A1A2E"));
 
-        // Converti DP a PX in base alla densità effettiva
-        int keyboardHeightDp = 380;  // 380 DP per tastiera
-        int displayHeightDp = 60;    // 60 DP per display input
-
-        int keyboardHeight = (int) (keyboardHeightDp * density);
-        int displayHeight = (int) (displayHeightDp * density);
-        int gameViewHeight = screenHeight - keyboardHeight - displayHeight;
+        // Usa PERCENTUALI REALI dello schermo
+        int keyboardHeight = (int) (screenHeight * 0.25);   // 25% per tastiera
+        int displayHeight = (int) (screenHeight * 0.05);    // 5% per display
+        int gameViewHeight = (int) (screenHeight * 0.70);   // 70% per gioco
 
         // 1. GameView (altezza dinamica = resto dello spazio)
         gameView = new GameView(this, screenWidth, gameViewHeight, this);

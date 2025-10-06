@@ -15,6 +15,8 @@ public class KeyboardView extends LinearLayout {
     }
 
     private KeyboardListener listener;
+    private int availableWidth;
+    private int availableHeight;
 
     public KeyboardView(Context context, KeyboardListener listener) {
         super(context);
@@ -23,16 +25,34 @@ public class KeyboardView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         setGravity(Gravity.CENTER);
         setBackgroundColor(Color.parseColor("#2C2C3E"));
+    }
 
-        // Ottieni densità per conversione DP -> PX
-        float density = context.getResources().getDisplayMetrics().density;
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
 
+        // Ora conosciamo le dimensioni reali, crea la tastiera
+        if (getChildCount() == 0) {
+            createKeyboard(w, h);
+        }
+    }
+
+    private void createKeyboard(int width, int height) {
         // Crea griglia 4x3
-        GridLayout grid = new GridLayout(context);
+        GridLayout grid = new GridLayout(getContext());
         grid.setRowCount(4);
         grid.setColumnCount(3);
-        int paddingPx = (int) (10 * density);
-        grid.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        int padding = (int) (width * 0.02); // 2% padding
+        grid.setPadding(padding, padding, padding, padding);
+
+        // Calcola dimensioni tasti in base allo spazio disponibile
+        int totalWidth = width - (padding * 2);
+        int totalHeight = height - (padding * 2);
+
+        int buttonWidth = (totalWidth / 3) - 20;   // 3 colonne
+        int buttonHeight = (totalHeight / 4) - 20; // 4 righe
+        int margin = 8;
 
         // Layout tasti:
         // 1 2 3
@@ -44,28 +64,18 @@ public class KeyboardView extends LinearLayout {
         // -1 = RESET (⌫)
         // -2 = placeholder vuoto
 
-        // Dimensioni tasti in DP
-        int buttonWidthDp = 100;
-        int buttonHeightDp = 80;
-        int marginDp = 4;
-
         for (int key : keys) {
             if (key == -2) {
                 // Spazio vuoto
-                View empty = new View(context);
+                View empty = new View(getContext());
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = (int) (buttonWidthDp * density);
-                params.height = (int) (buttonHeightDp * density);
-                params.setMargins(
-                    (int) (marginDp * density),
-                    (int) (marginDp * density),
-                    (int) (marginDp * density),
-                    (int) (marginDp * density)
-                );
+                params.width = buttonWidth;
+                params.height = buttonHeight;
+                params.setMargins(margin, margin, margin, margin);
                 empty.setLayoutParams(params);
                 grid.addView(empty);
             } else {
-                Button btn = createButton(context, key, density, buttonWidthDp, buttonHeightDp, marginDp);
+                Button btn = createButton(key, buttonWidth, buttonHeight, margin);
                 grid.addView(btn);
             }
         }
@@ -73,19 +83,13 @@ public class KeyboardView extends LinearLayout {
         addView(grid);
     }
 
-    private Button createButton(Context context, final int key, float density,
-                                int widthDp, int heightDp, int marginDp) {
-        Button btn = new Button(context);
+    private Button createButton(final int key, int width, int height, int margin) {
+        Button btn = new Button(getContext());
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = (int) (widthDp * density);
-        params.height = (int) (heightDp * density);
-        params.setMargins(
-            (int) (marginDp * density),
-            (int) (marginDp * density),
-            (int) (marginDp * density),
-            (int) (marginDp * density)
-        );
+        params.width = width;
+        params.height = height;
+        params.setMargins(margin, margin, margin, margin);
         btn.setLayoutParams(params);
 
         if (key == -1) {
