@@ -15,22 +15,34 @@ public class KeyboardView extends LinearLayout {
     }
 
     private KeyboardListener listener;
+    private GridLayout grid;
 
-    public KeyboardView(Context context, KeyboardListener listener, int width, int height) {
+    public KeyboardView(Context context, KeyboardListener listener) {
         super(context);
         this.listener = listener;
 
         setOrientation(LinearLayout.VERTICAL);
         setGravity(Gravity.CENTER);
         setBackgroundColor(Color.parseColor("#2C2C3E"));
+    }
 
-        // Crea subito la tastiera con le dimensioni passate
-        createKeyboard(width, height);
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+
+        // Crea la tastiera solo quando conosciamo le dimensioni reali
+        if (changed && grid == null) {
+            int width = getWidth();
+            int height = getHeight();
+            if (width > 0 && height > 0) {
+                createKeyboard(width, height);
+            }
+        }
     }
 
     private void createKeyboard(int width, int height) {
         // Crea griglia 4x3 che riempie tutto lo spazio
-        GridLayout grid = new GridLayout(getContext());
+        grid = new GridLayout(getContext());
         grid.setRowCount(4);
         grid.setColumnCount(3);
         grid.setLayoutParams(new LinearLayout.LayoutParams(
