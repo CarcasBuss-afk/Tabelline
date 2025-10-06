@@ -49,17 +49,32 @@ public class MainActivity extends Activity
         gameView.setLayoutParams(gameParams);
         mainLayout.addView(gameView);
 
-        // 2. Input Display con progress bar
-        LinearLayout displayContainer = new LinearLayout(this);
-        displayContainer.setOrientation(LinearLayout.HORIZONTAL);
-        displayContainer.setBackgroundColor(Color.parseColor("#16213E"));
-        LinearLayout.LayoutParams displayContainerParams = new LinearLayout.LayoutParams(
+        // 2. Input Display
+        inputDisplay = new TextView(this);
+        inputDisplay.setText("_");
+        inputDisplay.setTextSize(0, displayHeight * 0.6f);
+        inputDisplay.setTextColor(Color.WHITE);
+        inputDisplay.setGravity(Gravity.CENTER);
+        inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
+        LinearLayout.LayoutParams displayParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             displayHeight
         );
-        displayContainer.setLayoutParams(displayContainerParams);
+        inputDisplay.setLayoutParams(displayParams);
+        mainLayout.addView(inputDisplay);
 
-        // Progress bar verticale (lato sinistro, larghezza 5% dello schermo)
+        // 3. Container per Keyboard + Progress Bar
+        LinearLayout keyboardContainer = new LinearLayout(this);
+        keyboardContainer.setOrientation(LinearLayout.HORIZONTAL);
+        keyboardContainer.setBackgroundColor(Color.parseColor("#1A1A2E"));
+        keyboardContainer.setPadding(10, 10, 10, 10); // Padding per vedere contorni
+        LinearLayout.LayoutParams keyboardContainerParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            keyboardHeight
+        );
+        keyboardContainer.setLayoutParams(keyboardContainerParams);
+
+        // Progress bar verticale (lato sinistro, larghezza 3% dello schermo)
         final android.widget.ProgressBar progressBar = new android.widget.ProgressBar(
             this, null, android.R.attr.progressBarStyleHorizontal
         );
@@ -69,37 +84,23 @@ public class MainActivity extends Activity
         progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#27AE60")));
         progressBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2C2C3E")));
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-            (int) (screenWidth * 0.05),
+            (int) (screenWidth * 0.03),
             LinearLayout.LayoutParams.MATCH_PARENT
         );
         progressBar.setLayoutParams(progressParams);
-        displayContainer.addView(progressBar);
+        keyboardContainer.addView(progressBar);
 
-        // Input display (resto dello spazio)
-        inputDisplay = new TextView(this);
-        inputDisplay.setText("_");
-        inputDisplay.setTextSize(0, displayHeight * 0.6f);
-        inputDisplay.setTextColor(Color.WHITE);
-        inputDisplay.setGravity(Gravity.CENTER);
-        inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
-        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
-            0,
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            1.0f
-        );
-        inputDisplay.setLayoutParams(textParams);
-        displayContainer.addView(inputDisplay);
-
-        mainLayout.addView(displayContainer);
-
-        // 3. Keyboard (passa dimensioni esatte)
-        keyboard = new KeyboardView(this, this, screenWidth, keyboardHeight);
+        // Keyboard (resto dello spazio - 97% larghezza)
+        int keyboardWidth = screenWidth - (int) (screenWidth * 0.03) - 20; // -20 per padding
+        keyboard = new KeyboardView(this, this, keyboardWidth, keyboardHeight - 20);
         LinearLayout.LayoutParams keyboardParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            keyboardHeight
+            LinearLayout.LayoutParams.MATCH_PARENT
         );
         keyboard.setLayoutParams(keyboardParams);
-        mainLayout.addView(keyboard);
+        keyboardContainer.addView(keyboard);
+
+        mainLayout.addView(keyboardContainer);
 
         setContentView(mainLayout);
 
