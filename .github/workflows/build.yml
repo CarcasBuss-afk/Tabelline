@@ -31,13 +31,13 @@ jobs:
     - name: Sign APK
       run: |
         echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release-key.jks
-        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-          -keystore release-key.jks \
-          -storepass ${{ secrets.KEYSTORE_PASSWORD }} \
-          -keypass ${{ secrets.KEYSTORE_PASSWORD }} \
-          app/build/outputs/apk/release/app-release-unsigned.apk \
-          ${{ secrets.KEY_ALIAS }}
-        mv app/build/outputs/apk/release/app-release-unsigned.apk app/build/outputs/apk/release/tabelline-signed.apk
+        $ANDROID_HOME/build-tools/34.0.0/apksigner sign \
+          --ks release-key.jks \
+          --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          --key-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+          --ks-key-alias ${{ secrets.KEY_ALIAS }} \
+          --out app/build/outputs/apk/release/tabelline-signed.apk \
+          app/build/outputs/apk/release/app-release-unsigned.apk
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
