@@ -35,8 +35,12 @@ public class MainActivity extends Activity
         mainLayout.setOrientation(LinearLayout.VERTICAL);
         mainLayout.setBackgroundColor(Color.parseColor("#1A1A2E"));
 
-        // 1. GameView (77% altezza)
-        int gameViewHeight = (int) (screenHeight * 0.77);
+        // Calcola altezze in modo fisso
+        int keyboardHeight = 600;  // Altezza fissa tastiera
+        int displayHeight = 100;   // Altezza fissa display input
+        int gameViewHeight = screenHeight - keyboardHeight - displayHeight;
+
+        // 1. GameView (altezza dinamica = resto dello spazio)
         gameView = new GameView(this, screenWidth, gameViewHeight, this);
         LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -45,8 +49,7 @@ public class MainActivity extends Activity
         gameView.setLayoutParams(gameParams);
         mainLayout.addView(gameView);
 
-        // 2. Input Display (3% altezza)
-        int displayHeight = (int) (screenHeight * 0.03);
+        // 2. Input Display (altezza fissa 100px)
         inputDisplay = new TextView(this);
         inputDisplay.setText("_");
         inputDisplay.setTextSize(32);
@@ -60,11 +63,11 @@ public class MainActivity extends Activity
         inputDisplay.setLayoutParams(displayParams);
         mainLayout.addView(inputDisplay);
 
-        // 3. Keyboard (20% altezza rimanente)
+        // 3. Keyboard (altezza fissa 600px)
         keyboard = new KeyboardView(this, this);
         LinearLayout.LayoutParams keyboardParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
+            keyboardHeight
         );
         keyboard.setLayoutParams(keyboardParams);
         mainLayout.addView(keyboard);

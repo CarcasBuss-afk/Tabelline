@@ -12,8 +12,8 @@ public class InputManager {
     private Handler handler = new Handler();
     private InputListener listener;
 
-    private static final long MULTIPLY_DELAY = 2000; // 2 secondi
-    private static final long CONFIRM_DELAY = 2000;  // 2 secondi
+    private static final long MULTIPLY_DELAY = 1000; // 1 secondo
+    private static final long CONFIRM_DELAY = 1000;  // 1 secondo
 
     public InputManager(InputListener listener) {
         this.listener = listener;
