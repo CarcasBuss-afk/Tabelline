@@ -24,11 +24,15 @@ public class KeyboardView extends LinearLayout {
         setGravity(Gravity.CENTER);
         setBackgroundColor(Color.parseColor("#2C2C3E"));
 
+        // Ottieni densità per conversione DP -> PX
+        float density = context.getResources().getDisplayMetrics().density;
+
         // Crea griglia 4x3
         GridLayout grid = new GridLayout(context);
         grid.setRowCount(4);
         grid.setColumnCount(3);
-        grid.setPadding(20, 20, 20, 20);
+        int paddingPx = (int) (10 * density);
+        grid.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
 
         // Layout tasti:
         // 1 2 3
@@ -40,18 +44,28 @@ public class KeyboardView extends LinearLayout {
         // -1 = RESET (⌫)
         // -2 = placeholder vuoto
 
+        // Dimensioni tasti in DP
+        int buttonWidthDp = 100;
+        int buttonHeightDp = 80;
+        int marginDp = 4;
+
         for (int key : keys) {
             if (key == -2) {
                 // Spazio vuoto
                 View empty = new View(context);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.width = 180;
-                params.height = 140;
-                params.setMargins(5, 5, 5, 5);
+                params.width = (int) (buttonWidthDp * density);
+                params.height = (int) (buttonHeightDp * density);
+                params.setMargins(
+                    (int) (marginDp * density),
+                    (int) (marginDp * density),
+                    (int) (marginDp * density),
+                    (int) (marginDp * density)
+                );
                 empty.setLayoutParams(params);
                 grid.addView(empty);
             } else {
-                Button btn = createButton(context, key);
+                Button btn = createButton(context, key, density, buttonWidthDp, buttonHeightDp, marginDp);
                 grid.addView(btn);
             }
         }
@@ -59,13 +73,19 @@ public class KeyboardView extends LinearLayout {
         addView(grid);
     }
 
-    private Button createButton(Context context, final int key) {
+    private Button createButton(Context context, final int key, float density,
+                                int widthDp, int heightDp, int marginDp) {
         Button btn = new Button(context);
 
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 180;
-        params.height = 140;
-        params.setMargins(5, 5, 5, 5);
+        params.width = (int) (widthDp * density);
+        params.height = (int) (heightDp * density);
+        params.setMargins(
+            (int) (marginDp * density),
+            (int) (marginDp * density),
+            (int) (marginDp * density),
+            (int) (marginDp * density)
+        );
         btn.setLayoutParams(params);
 
         if (key == -1) {
