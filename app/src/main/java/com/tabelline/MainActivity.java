@@ -49,20 +49,42 @@ public class MainActivity extends Activity
         gameView.setLayoutParams(gameParams);
         mainLayout.addView(gameView);
 
-        // 2. Input Display
+        // 2. Input Display con progress bar
+        LinearLayout displayContainer = new LinearLayout(this);
+        displayContainer.setOrientation(LinearLayout.HORIZONTAL);
+        displayContainer.setBackgroundColor(Color.parseColor("#16213E"));
+        LinearLayout.LayoutParams displayContainerParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            displayHeight
+        );
+        displayContainer.setLayoutParams(displayContainerParams);
+
+        // Progress bar verticale (lato sinistro, larghezza 5% dello schermo)
+        final View progressBar = new View(this);
+        progressBar.setBackgroundColor(Color.parseColor("#27AE60")); // Verde
+        LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
+            (int) (screenWidth * 0.05),
+            LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        progressBar.setLayoutParams(progressParams);
+        displayContainer.addView(progressBar);
+
+        // Input display (resto dello spazio)
         inputDisplay = new TextView(this);
         inputDisplay.setText("_");
-        // Font size = 60% dell'altezza del display
         inputDisplay.setTextSize(0, displayHeight * 0.6f);
         inputDisplay.setTextColor(Color.WHITE);
         inputDisplay.setGravity(Gravity.CENTER);
         inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
-        LinearLayout.LayoutParams displayParams = new LinearLayout.LayoutParams(
+        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(
+            0,
             LinearLayout.LayoutParams.MATCH_PARENT,
-            displayHeight
+            1.0f
         );
-        inputDisplay.setLayoutParams(displayParams);
-        mainLayout.addView(inputDisplay);
+        inputDisplay.setLayoutParams(textParams);
+        displayContainer.addView(inputDisplay);
+
+        mainLayout.addView(displayContainer);
 
         // 3. Keyboard (passa dimensioni esatte)
         keyboard = new KeyboardView(this, this, screenWidth, keyboardHeight);
@@ -75,8 +97,8 @@ public class MainActivity extends Activity
 
         setContentView(mainLayout);
 
-        // Inizializza InputManager
-        inputManager = new InputManager(this);
+        // Inizializza InputManager con progress bar
+        inputManager = new InputManager(this, progressBar);
 
         // Avvia gioco
         gameView.startGame();

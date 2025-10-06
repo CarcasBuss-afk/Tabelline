@@ -29,28 +29,36 @@ public class KeyboardView extends LinearLayout {
     }
 
     private void createKeyboard(int width, int height) {
+        // Layout orizzontale per centrare la griglia
+        LinearLayout container = new LinearLayout(getContext());
+        container.setOrientation(LinearLayout.HORIZONTAL);
+        container.setGravity(Gravity.CENTER);
+        container.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        ));
+
         // Crea griglia 4x3
         GridLayout grid = new GridLayout(getContext());
         grid.setRowCount(4);
         grid.setColumnCount(3);
 
         // PASSO 2: Calcola dimensioni interne come % dello spazio tastiera
-        int padding = (int) (Math.min(width, height) * 0.03);  // 3% del lato più piccolo
+        int padding = (int) (Math.min(width, height) * 0.03);
         grid.setPadding(padding, padding, padding, padding);
 
-        // Spazio utilizzabile dopo padding
-        int usableWidth = width - (padding * 2);
+        // Usa solo 70% della larghezza per rendere i tasti meno larghi
+        int usableWidth = (int) (width * 0.70);
         int usableHeight = height - (padding * 2);
 
         // Ogni pulsante occupa 1/3 della larghezza e 1/4 dell'altezza
-        // Lasciamo margini tra i pulsanti (2% dello spazio)
         int marginPercent = 2;
         int totalMarginWidth = (int) (usableWidth * marginPercent / 100.0);
         int totalMarginHeight = (int) (usableHeight * marginPercent / 100.0);
 
         int buttonWidth = (usableWidth / 3) - totalMarginWidth;
         int buttonHeight = (usableHeight / 4) - totalMarginHeight;
-        int margin = totalMarginWidth / 6;  // Diviso equamente tra i margini
+        int margin = totalMarginWidth / 6;
 
         // Layout tasti:
         // 1 2 3
@@ -78,7 +86,8 @@ public class KeyboardView extends LinearLayout {
             }
         }
 
-        addView(grid);
+        container.addView(grid);
+        addView(container);
     }
 
     private Button createButton(final int key, int width, int height, int margin) {

@@ -1,6 +1,9 @@
 package com.tabelline;
 
 import android.os.Handler;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 
 public class InputManager {
     public interface InputListener {
@@ -11,12 +14,14 @@ public class InputManager {
     private String currentInput = "";
     private Handler handler = new Handler();
     private InputListener listener;
+    private View progressBar;
 
-    private static final long MULTIPLY_DELAY = 1000; // 1 secondo
-    private static final long CONFIRM_DELAY = 1000;  // 1 secondo
+    private static final long MULTIPLY_DELAY = 700; // 0.7 secondi
+    private static final long CONFIRM_DELAY = 700;  // 0.7 secondi
 
-    public InputManager(InputListener listener) {
+    public InputManager(InputListener listener, View progressBar) {
         this.listener = listener;
+        this.progressBar = progressBar;
     }
 
     // Timer che aggiunge automaticamente ×
@@ -44,18 +49,21 @@ public class InputManager {
         // Cancella timer precedenti
         handler.removeCallbacks(multiplyRunnable);
         handler.removeCallbacks(confirmRunnable);
+        stopProgressAnimation();
 
         if (!currentInput.contains("×")) {
             // Primo fattore
             currentInput += digit;
             notifyInputChanged();
-            // Avvia timer per aggiungere ×
+            // Avvia timer per aggiungere × e anima progress bar
+            startProgressAnimation(MULTIPLY_DELAY);
             handler.postDelayed(multiplyRunnable, MULTIPLY_DELAY);
         } else {
             // Secondo fattore
             currentInput += digit;
             notifyInputChanged();
-            // Avvia timer per confermare
+            // Avvia timer per confermare e anima progress bar
+            startProgressAnimation(CONFIRM_DELAY);
             handler.postDelayed(confirmRunnable, CONFIRM_DELAY);
         }
     }
@@ -63,6 +71,7 @@ public class InputManager {
     public void reset() {
         handler.removeCallbacks(multiplyRunnable);
         handler.removeCallbacks(confirmRunnable);
+        stopProgressAnimation();
         currentInput = "";
         notifyInputChanged();
     }
@@ -102,5 +111,29 @@ public class InputManager {
     public void cleanup() {
         handler.removeCallbacks(multiplyRunnable);
         handler.removeCallbacks(confirmRunnable);
+        stopProgressAnimation();
+    }
+
+    // Anima la progress bar da sinistra a destra in base al tempo
+    private void startProgressAnimation(long duration) {
+        if (progressBar == null) return;
+
+        // Animazione di scala orizzontale da 0 a 1
+        ScaleAnimation scaleAnim = new ScaleAnimation(
+            0.0f, 1.0f,    // Da 0% a 100% in larghezza
+            1.0f, 1.0f,    // Altezza rimane al 100%
+            Animation.ABSOLUTE, 0,  // Pivot X a sinistra
+            Animation.RELATIVE_TO_SELF, 0.5f  // Pivot Y al centro
+        );
+        scaleAnim.setDuration(duration);
+        scaleAnim.setFillAfter(true);
+
+        progressBar.startAnimation(scaleAnim);
+    }
+
+    private void stopProgressAnimation() {
+        if (progressBar == null) return;
+        progressBar.clearAnimation();
+        progressBar.setScaleX(0.0f); // Reset a 0%
     }
 }
