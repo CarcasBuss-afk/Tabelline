@@ -1,9 +1,7 @@
 package com.tabelline;
 
 import android.os.Handler;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
+import android.widget.ProgressBar;
 
 public class InputManager {
     public interface InputListener {
@@ -14,12 +12,17 @@ public class InputManager {
     private String currentInput = "";
     private Handler handler = new Handler();
     private InputListener listener;
-    private View progressBar;
+    private ProgressBar progressBar;
 
     private static final long MULTIPLY_DELAY = 700; // 0.7 secondi
     private static final long CONFIRM_DELAY = 700;  // 0.7 secondi
+    private static final long PROGRESS_UPDATE_INTERVAL = 16; // ~60 FPS
 
-    public InputManager(InputListener listener, View progressBar) {
+    private long timerStartTime = 0;
+    private long timerDuration = 0;
+    private boolean timerRunning = false;
+
+    public InputManager(InputListener listener, ProgressBar progressBar) {
         this.listener = listener;
         this.progressBar = progressBar;
     }
@@ -114,26 +117,45 @@ public class InputManager {
         stopProgressAnimation();
     }
 
-    // Anima la progress bar da sinistra a destra in base al tempo
+    // Runnable per aggiornare la progress bar
+    private Runnable progressUpdateRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!timerRunning || progressBar == null) return;
+
+            long elapsed = System.currentTimeMillis() - timerStartTime;
+            float progress = Math.min(1.0f, (float) elapsed / timerDuration);
+
+            // Aggiorna progress (0-100)
+            progressBar.setProgress((int) (progress * 100));
+
+            if (progress < 1.0f) {
+                handler.postDelayed(this, PROGRESS_UPDATE_INTERVAL);
+            }
+        }
+    };
+
     private void startProgressAnimation(long duration) {
         if (progressBar == null) return;
 
-        // Animazione di scala orizzontale da 0 a 1
-        ScaleAnimation scaleAnim = new ScaleAnimation(
-            0.0f, 1.0f,    // Da 0% a 100% in larghezza
-            1.0f, 1.0f,    // Altezza rimane al 100%
-            Animation.ABSOLUTE, 0,  // Pivot X a sinistra
-            Animation.RELATIVE_TO_SELF, 0.5f  // Pivot Y al centro
-        );
-        scaleAnim.setDuration(duration);
-        scaleAnim.setFillAfter(true);
+        timerStartTime = System.currentTimeMillis();
+        timerDuration = duration;
+        timerRunning = true;
 
-        progressBar.startAnimation(scaleAnim);
+        // Reset a 0
+        progressBar.setProgress(0);
+
+        // Avvia aggiornamenti
+        handler.post(progressUpdateRunnable);
     }
 
     private void stopProgressAnimation() {
         if (progressBar == null) return;
-        progressBar.clearAnimation();
-        progressBar.setScaleX(0.0f); // Reset a 0%
+
+        timerRunning = false;
+        handler.removeCallbacks(progressUpdateRunnable);
+
+        // Reset a 0
+        progressBar.setProgress(0);
     }
 }

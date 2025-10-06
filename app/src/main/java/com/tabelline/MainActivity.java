@@ -60,8 +60,14 @@ public class MainActivity extends Activity
         displayContainer.setLayoutParams(displayContainerParams);
 
         // Progress bar verticale (lato sinistro, larghezza 5% dello schermo)
-        final View progressBar = new View(this);
-        progressBar.setBackgroundColor(Color.parseColor("#27AE60")); // Verde
+        final android.widget.ProgressBar progressBar = new android.widget.ProgressBar(
+            this, null, android.R.attr.progressBarStyleHorizontal
+        );
+        progressBar.setMax(100);
+        progressBar.setProgress(0);
+        progressBar.setRotation(270); // Ruota 270° per renderla verticale
+        progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#27AE60")));
+        progressBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2C2C3E")));
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
             (int) (screenWidth * 0.05),
             LinearLayout.LayoutParams.MATCH_PARENT
