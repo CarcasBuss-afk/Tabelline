@@ -23,16 +23,24 @@ public class GameView extends SurfaceView implements Runnable {
         super(context);
         surfaceHolder = getHolder();
         paint = new Paint();
-        gameEngine = new GameEngine(width, height);
         gameOverListener = listener;
+        // Non creare gameEngine qui, aspetta che il layout sia pronto
     }
 
     public GameEngine getGameEngine() {
+        // Crea gameEngine al primo accesso se non esiste
+        if (gameEngine == null) {
+            gameEngine = new GameEngine(getWidth(), getHeight());
+        }
         return gameEngine;
     }
 
     public void startGame() {
         playing = true;
+        // Assicurati che gameEngine usi le dimensioni reali
+        if (gameEngine == null) {
+            gameEngine = new GameEngine(getWidth(), getHeight());
+        }
         gameEngine.reset();
         gameThread = new Thread(this);
         gameThread.start();
