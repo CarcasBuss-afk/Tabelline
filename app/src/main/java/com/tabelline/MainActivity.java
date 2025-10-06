@@ -44,18 +44,19 @@ public class MainActivity extends Activity
 
         // Calcola altezze precise considerando padding
         int totalPadding = 20; // 10 top + 10 bottom del keyboardContainer
-        int availableHeight = screenHeight - totalPadding;
+        int bottomMargin = 30; // Spazio sotto il tastierino
+        int availableHeight = screenHeight - totalPadding - bottomMargin;
 
         int displayHeight = (int) (availableHeight * 0.05);    // 5% per display
-        int keyboardHeight = (int) (availableHeight * 0.25);   // 25% per tastiera
-        int gameViewHeight = availableHeight - displayHeight - keyboardHeight; // Resto per gioco
+        int keyboardHeight = (int) (availableHeight * 0.30);   // 30% per tastiera
+        int gameViewHeight = availableHeight - displayHeight - keyboardHeight; // Resto per gioco (65%)
 
         // 1. GameView (usa peso per riempire spazio rimanente)
         gameView = new GameView(this, screenWidth, gameViewHeight, this);
         LinearLayout.LayoutParams gameParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             0,
-            0.70f  // Peso 70%
+            0.65f  // Peso 65%
         );
         gameView.setLayoutParams(gameParams);
         mainLayout.addView(gameView);
@@ -79,11 +80,11 @@ public class MainActivity extends Activity
         LinearLayout keyboardContainer = new LinearLayout(this);
         keyboardContainer.setOrientation(LinearLayout.HORIZONTAL);
         keyboardContainer.setBackgroundColor(Color.parseColor("#1A1A2E"));
-        keyboardContainer.setPadding(10, 10, 10, 10);
+        keyboardContainer.setPadding(10, 10, 10, 10 + bottomMargin);
         LinearLayout.LayoutParams keyboardContainerParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             0,
-            0.25f  // Peso 25%
+            0.30f  // Peso 30%
         );
         keyboardContainer.setLayoutParams(keyboardContainerParams);
 
