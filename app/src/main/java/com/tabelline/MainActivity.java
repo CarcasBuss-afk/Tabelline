@@ -63,8 +63,8 @@ public class MainActivity extends Activity
         inputDisplay.setLayoutParams(displayParams);
         mainLayout.addView(inputDisplay);
 
-        // 3. Keyboard (altezza fissa 600px)
-        keyboard = new KeyboardView(this, this);
+        // 3. Keyboard (passa dimensioni esatte)
+        keyboard = new KeyboardView(this, this, screenWidth, keyboardHeight);
         LinearLayout.LayoutParams keyboardParams = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             keyboardHeight

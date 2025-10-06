@@ -15,26 +15,17 @@ public class KeyboardView extends LinearLayout {
     }
 
     private KeyboardListener listener;
-    private int availableWidth;
-    private int availableHeight;
 
-    public KeyboardView(Context context, KeyboardListener listener) {
+    public KeyboardView(Context context, KeyboardListener listener, int width, int height) {
         super(context);
         this.listener = listener;
 
         setOrientation(LinearLayout.VERTICAL);
         setGravity(Gravity.CENTER);
         setBackgroundColor(Color.parseColor("#2C2C3E"));
-    }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        // Ora conosciamo le dimensioni reali, crea la tastiera
-        if (getChildCount() == 0) {
-            createKeyboard(w, h);
-        }
+        // Crea subito la tastiera con le dimensioni passate
+        createKeyboard(width, height);
     }
 
     private void createKeyboard(int width, int height) {
@@ -43,15 +34,15 @@ public class KeyboardView extends LinearLayout {
         grid.setRowCount(4);
         grid.setColumnCount(3);
 
-        int padding = (int) (width * 0.02); // 2% padding
+        int padding = 20;
         grid.setPadding(padding, padding, padding, padding);
 
         // Calcola dimensioni tasti in base allo spazio disponibile
         int totalWidth = width - (padding * 2);
         int totalHeight = height - (padding * 2);
 
-        int buttonWidth = (totalWidth / 3) - 20;   // 3 colonne
-        int buttonHeight = (totalHeight / 4) - 20; // 4 righe
+        int buttonWidth = (totalWidth / 3) - 16;   // 3 colonne
+        int buttonHeight = (totalHeight / 4) - 16; // 4 righe
         int margin = 8;
 
         // Layout tasti:
