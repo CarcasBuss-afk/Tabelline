@@ -4,6 +4,139 @@ Registro dettagliato di tutte le modifiche, interventi e analisi del progetto.
 
 ---
 
+## 2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1
+
+**Tipo**: 🆕 Creazione
+**Autore**: Claude Code
+**Commit**: 5752050
+
+### Motivazione
+Migliorare il gameplay rimuovendo moltiplicazioni banali (per 1) e numeri primi, aggiungendo un sistema di combo per incentivare strategie più elaborate e rendere il gioco più coinvolgente.
+
+### Descrizione
+Implementato sistema di **combo moltiplicative a catena** che permette di distruggere più palline con una singola sequenza di fattori, con punteggio esponenziale crescente. Escluse moltiplicazioni per 1 per focalizzare l'apprendimento sulle tabelline reali.
+
+### Dettagli Tecnici
+
+**1. Esclusione Fattore 1** (`Ball.java`)
+```java
+// Prima: factor = random.nextInt(maxNumber) + 1  // Range: 1-maxNumber
+// Dopo:  factor = random.nextInt(maxNumber - 1) + 2  // Range: 2-maxNumber
+
+// Numeri ESCLUSI automaticamente:
+// - Moltiplicazioni per 1: 1×5, 7×1, ecc.
+// - Numeri primi: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, ...
+```
+
+**2. Sistema Combo a Catena** (`InputManager.java`)
+- **Prima**: Input limitato a 2 fattori (es. `3×4`)
+- **Dopo**: Input illimitato (es. `2×2×3×2`)
+- **Struttura dati**: `ArrayList<Integer> factors` invece di `factor1, factor2`
+- **Logica timer**:
+  - Ogni cifra digitata → avvia timer 0.7s
+  - Dopo 0.7s → finalizza fattore corrente (aggiunge a `factors[]`)
+  - Dopo altri 0.7s senza input → conferma e submit
+- **Display**: `"2×2×3_"` (mostra fattori confermati + fattore corrente + cursore)
+
+**3. Algoritmo Combo** (`GameEngine.java`)
+```java
+Input: [2, 2, 3, 2]
+
+// Calcolo risultati progressivi:
+results[0] = 2           // Cerca pallina "2"
+results[1] = 2 × 2 = 4   // Cerca pallina "4"
+results[2] = 4 × 3 = 12  // Cerca pallina "12"
+results[3] = 12 × 2 = 24 // Cerca pallina "24"
+
+// Verifica ALL-OR-NOTHING:
+if (tutte le palline [2,4,12,24] esistono) {
+    // Distrugge in ordine con punteggio esponenziale
+    ball 2:  10 × 2^0 = 10 pts
+    ball 4:  10 × 2^1 = 20 pts
+    ball 12: 10 × 2^2 = 40 pts
+    ball 24: 10 × 2^3 = 80 pts
+    TOTALE: 150 punti (+140 rispetto a 4 palline singole)
+} else {
+    // Combo fallita: NESSUNA pallina esplode
+}
+```
+
+**4. Punteggio Esponenziale**
+- Formula: `score = 10 × 2^(n-1)` dove n = posizione nella combo
+- Crescita:
+  - 1 pallina: 10 pts
+  - 2 palline: 10 + 20 = 30 pts (x3 rispetto a singole)
+  - 3 palline: 10 + 20 + 40 = 70 pts (x7)
+  - 4 palline: 10 + 20 + 40 + 80 = 150 pts (x15)
+  - 5 palline: 310 pts (x31)
+
+**5. Feedback Visivo** (`MainActivity.java`)
+- **Combo x2+**: Display mostra `"COMBO x3! +70"` per 1 secondo (sfondo verde)
+- **Singola**: Flash verde breve (300ms)
+- **Fallimento**: Flash rosso breve (300ms)
+
+**6. Nuova Classe** (`ComboResult.java`)
+```java
+public class ComboResult {
+    public boolean success;       // Combo riuscita?
+    public int ballsDestroyed;    // Numero palline distrutte
+    public int totalScore;        // Punteggio totale guadagnato
+}
+```
+
+### Esempio Pratico
+```
+Palline sullo schermo: 4, 12, 24, 6, 8
+
+Scenario 1 - COMBO RIUSCITA:
+Input: 2×2×3×2
+  2 → cerca "2" → NON ESISTE
+  COMBO FALLITA → nessuna esplosione
+
+Scenario 2 - COMBO RIUSCITA:
+Input: 2×2×3
+  2 → "2" NON ESISTE
+  COMBO FALLITA
+
+Scenario 3 - SINGOLA:
+Input: 2×2
+  4 → "4" ESISTE
+  Distrugge pallina 4 → +10 pts
+
+Scenario 4 - COMBO PARZIALE:
+Input: 2×3×2
+  2 → "2" NON ESISTE
+  COMBO FALLITA
+
+Scenario 5 - STRATEGIA AVANZATA (con palline 2,4,12,24):
+Input: 2×2×3×2
+  2, 4, 12, 24 → TUTTE ESISTONO
+  COMBO x4! +150 pts
+```
+
+### File Modificati
+- `Ball.java`: Generazione fattori da 2 a maxNumber
+- `InputManager.java`: Gestione catene di fattori con timer progressivi
+- `GameEngine.java`: Algoritmo combo con verifica completa e punteggio esponenziale
+- `MainActivity.java`: Callback aggiornato e feedback visivo combo
+- `ComboResult.java`: **NUOVO** - DTO per risultati combo
+
+### Outcome
+✅ **Gameplay educativo migliorato**: niente più moltiplicazioni banali per 1
+✅ **Strategia aggiunta**: i giocatori possono pianificare combo elaborati
+✅ **Risk/Reward**: combo fallite non danno punti, incentivano precisione
+✅ **Punteggio esponenziale**: ricompensa combo lunghi in modo significativo
+✅ **Feedback chiaro**: display mostra "COMBO x3! +70" per successi multipli
+✅ **Mantiene semplicità**: input rimane intuitivo (digita numeri, aspetta 0.7s)
+
+### Note di Design
+- **Verifica ALL-OR-NOTHING**: previene frustrazione ("ho fatto quasi tutto giusto") mantenendo sfida
+- **Punteggio 2^n**: progressione drammatica senza essere sproporzionata (5 palline = x31, non x5)
+- **Accetta tutte le scomposizioni**: 12 distrutto da 2×6, 3×4, 4×3, 6×2 indifferentemente
+- **Validazione minima**: richiede almeno 2 fattori (impedisce inserimento di risultati diretti)
+
+---
+
 ## 2025-10-06 23:45 - Analisi Iniziale Progetto
 
 **Tipo**: 📊 Analisi

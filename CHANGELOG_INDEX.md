@@ -2,7 +2,7 @@
 
 Indice completo del file [CHANGELOG.md](CHANGELOG.md) per navigazione rapida.
 
-**Ultimo aggiornamento**: 2025-10-07 01:40
+**Ultimo aggiornamento**: 2025-10-07 02:00
 
 ---
 
@@ -10,7 +10,8 @@ Indice completo del file [CHANGELOG.md](CHANGELOG.md) per navigazione rapida.
 
 | Data | Ora | Tipo | Titolo | Riga |
 |------|-----|------|--------|------|
-| 2025-10-07 | 01:35 | 🐛 Fix | [Fix Tastiera Sparita (Multipli Tentativi)](CHANGELOG.md#2025-10-07-0135---fix-tastiera-sparita-multipli-tentativi) | 695 |
+| 2025-10-07 | 02:00 | 🆕 Creazione | [Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) | 7 |
+| 2025-10-07 | 01:35 | 🐛 Fix | [Fix Tastiera Sparita (Multipli Tentativi)](CHANGELOG.md#2025-10-07-0135---fix-tastiera-sparita-multipli-tentativi) | 833 |
 | 2025-10-07 | 01:30 | ✏️ Modifica | [Miglioramenti Ergonomia Tastiera](CHANGELOG.md#2025-10-07-0130---miglioramenti-ergonomia-tastiera) | 631 |
 | 2025-10-07 | 01:25 | 🆕 Creazione | [Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) | 559 |
 | 2025-10-07 | 01:15 | 🐛 Fix | [Fix Sbilanciamento Spazio Orizzontale Tastiera](CHANGELOG.md#2025-10-07-0115---fix-sbilanciamento-spazio-orizzontale-tastiera) | 506 |
@@ -28,8 +29,9 @@ Indice completo del file [CHANGELOG.md](CHANGELOG.md) per navigazione rapida.
 
 ## Indice per Tipologia
 
-### 🆕 Creazione (1)
-- [2025-10-07 01:25 - Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) - Riga 559
+### 🆕 Creazione (2)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - Riga 7
+- [2025-10-07 01:25 - Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) - Riga 697
 
 ### ✏️ Modifica (2)
 - [2025-10-07 01:30 - Miglioramenti Ergonomia Tastiera](CHANGELOG.md#2025-10-07-0130---miglioramenti-ergonomia-tastiera) - Riga 631
@@ -59,11 +61,26 @@ Indice completo del file [CHANGELOG.md](CHANGELOG.md) per navigazione rapida.
 
 ## Indice per File
 
-### app/src/main/java/com/tabelline/MainActivity.java (7 modifiche)
-- [2025-10-07 01:35 - Fix Tastiera Sparita (Multipli Tentativi)](CHANGELOG.md#2025-10-07-0135---fix-tastiera-sparita-multipli-tentativi) - 🐛 Fix - Riga 695
-- [2025-10-07 01:30 - Miglioramenti Ergonomia Tastiera](CHANGELOG.md#2025-10-07-0130---miglioramenti-ergonomia-tastiera) - ✏️ Modifica - Riga 631
-- [2025-10-07 01:25 - Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) - 🆕 Creazione - Riga 559
-- [2025-10-07 01:05 - Fix Game Over con Layout Timing e Collision Detection](CHANGELOG.md#2025-10-07-0105---fix-game-over-con-layout-timing-e-collision-detection) - 🐛 Fix - Riga 396
+### app/src/main/java/com/tabelline/Ball.java (2 modifiche)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - 🆕 Creazione - Riga 7
+- [2025-10-07 01:05 - Fix Game Over con Layout Timing e Collision Detection](CHANGELOG.md#2025-10-07-0105---fix-game-over-con-layout-timing-e-collision-detection) - 🐛 Fix - Riga 534
+
+### app/src/main/java/com/tabelline/GameEngine.java (1 modifica)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - 🆕 Creazione - Riga 7
+
+### app/src/main/java/com/tabelline/InputManager.java (2 modifiche)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - 🆕 Creazione - Riga 7
+- [2025-10-07 01:25 - Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) - 🆕 Creazione - Riga 697
+
+### app/src/main/java/com/tabelline/ComboResult.java (1 creazione)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - 🆕 Creazione - Riga 7
+
+### app/src/main/java/com/tabelline/MainActivity.java (8 modifiche)
+- [2025-10-07 02:00 - Sistema Combo Moltiplicativo e Esclusione Fattore 1](CHANGELOG.md#2025-10-07-0200---sistema-combo-moltiplicativo-e-esclusione-fattore-1) - 🆕 Creazione - Riga 7
+- [2025-10-07 01:35 - Fix Tastiera Sparita (Multipli Tentativi)](CHANGELOG.md#2025-10-07-0135---fix-tastiera-sparita-multipli-tentativi) - 🐛 Fix - Riga 833
+- [2025-10-07 01:30 - Miglioramenti Ergonomia Tastiera](CHANGELOG.md#2025-10-07-0130---miglioramenti-ergonomia-tastiera) - ✏️ Modifica - Riga 769
+- [2025-10-07 01:25 - Creazione VerticalProgressBar Custom](CHANGELOG.md#2025-10-07-0125---creazione-verticalprogressbar-custom) - 🆕 Creazione - Riga 697
+- [2025-10-07 01:05 - Fix Game Over con Layout Timing e Collision Detection](CHANGELOG.md#2025-10-07-0105---fix-game-over-con-layout-timing-e-collision-detection) - 🐛 Fix - Riga 534
 - [2025-10-07 00:50 - Fix Overflow Tastiera con Margine Esterno](CHANGELOG.md#2025-10-07-0050---fix-overflow-tastiera-con-margine-esterno) - 🐛 Fix - Riga 267
 - [2025-10-07 00:35 - Ridimensionamento Layout e Margine Tastiera](CHANGELOG.md#2025-10-07-0035---ridimensionamento-layout-e-margine-tastiera) - ✏️ Modifica - Riga 181
 - [2025-10-07 00:20 - Modalità Fullscreen Immersiva](CHANGELOG.md#2025-10-07-0020---modalità-fullscreen-immersiva) - 🐛 Fix - Riga 141
@@ -96,19 +113,19 @@ Indice completo del file [CHANGELOG.md](CHANGELOG.md) per navigazione rapida.
 
 ## Statistiche
 
-- **Totale interventi**: 13
+- **Totale interventi**: 14
 - **Periodo coperto**: 2025-10-06 → 2025-10-07
-- **File modificati**: 7 file unici
-- **Commit coinvolti**: 14 (0f162d1, d9aea0e, 89573b0, 8eebcbf, fd73c65, 9b36fde, fb8cb97, 6dd9be4, e7ad6bf, 8c7f5de, 5bb0edb, 1a37e4d, 6a3fcc5, 6d657f0, 7c6b85d)
+- **File modificati**: 8 file unici
+- **Commit coinvolti**: 15 (0f162d1, d9aea0e, 89573b0, 8eebcbf, fd73c65, 9b36fde, fb8cb97, 6dd9be4, e7ad6bf, 8c7f5de, 5bb0edb, 1a37e4d, 6a3fcc5, 6d657f0, 7c6b85d, 5752050)
 
 ### Distribuzione per Tipo
 ```
-🐛 Fix:         ███████████████████████████████   69% (9)
-✏️ Modifica:    ████████████                      15% (2)
-📊 Analisi:     ████████                           8% (1)
-🆕 Creazione:   ████████                           8% (1)
-🔧 Refactoring:                                    0% (0)
-🚀 Deploy:                                         0% (0)
+🐛 Fix:         ██████████████████████████████   64% (9)
+🆕 Creazione:   ██████████████                   14% (2)
+✏️ Modifica:    ██████████████                   14% (2)
+📊 Analisi:     ████████                          7% (1)
+🔧 Refactoring:                                   0% (0)
+🚀 Deploy:                                        0% (0)
 ```
 
 ---
