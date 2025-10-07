@@ -31,11 +31,21 @@ public class KeyboardView extends LinearLayout {
         super.onLayout(changed, l, t, r, b);
 
         // Crea la tastiera solo quando conosciamo le dimensioni reali
-        if (changed && grid == null) {
-            int width = getWidth();
-            int height = getHeight();
+        if (grid == null) {
+            final int width = getWidth();
+            final int height = getHeight();
+            android.util.Log.d("KeyboardView", "onLayout: changed=" + changed + ", width=" + width + ", height=" + height);
             if (width > 0 && height > 0) {
-                createKeyboard(width, height);
+                // Usa post per assicurarsi che il layout sia completamente pronto
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (grid == null) {
+                            createKeyboard(width, height);
+                            android.util.Log.d("KeyboardView", "Keyboard created successfully");
+                        }
+                    }
+                });
             }
         }
     }
