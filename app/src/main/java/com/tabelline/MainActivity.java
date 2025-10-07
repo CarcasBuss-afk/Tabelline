@@ -83,27 +83,17 @@ public class MainActivity extends Activity
         keyboardContainerParams.setMargins(0, 0, 0, bottomMargin); // Margine ESTERNO bottom
         keyboardContainer.setLayoutParams(keyboardContainerParams);
 
-        // Progress bar verticale (lato sinistro)
-        final android.widget.ProgressBar progressBar = new android.widget.ProgressBar(
-            this, null, android.R.attr.progressBarStyleHorizontal
-        );
+        // Progress bar verticale custom (lato sinistro)
+        final VerticalProgressBar progressBar = new VerticalProgressBar(this);
         progressBar.setMax(100);
         progressBar.setProgress(0);
-        progressBar.setRotation(270); // Ruota 270° per renderla verticale
-        progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#27AE60")));
-        progressBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2C2C3E")));
 
-        // Layout params: width/height sono relativi al container, NON alla rotazione visuale
-        // width = spazio orizzontale nel container (deve essere piccolo per lasciare spazio alla tastiera)
-        // height = spazio verticale nel container (MATCH_PARENT per riempire tutta l'altezza)
+        // Layout params: width = spessore barra, height = altezza completa del container
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-            (int) (screenWidth * 0.05),              // width = 5% per spessore barra
-            LinearLayout.LayoutParams.MATCH_PARENT   // height = piena altezza container
+            (int) (screenWidth * 0.05),              // width = 5% dello schermo (spessore)
+            LinearLayout.LayoutParams.MATCH_PARENT   // height = piena altezza del container
         );
         progressBar.setLayoutParams(progressParams);
-
-        // Aumenta lo spessore minimo della barra per renderla più visibile
-        progressBar.setMinimumHeight((int) (screenWidth * 0.05));
 
         keyboardContainer.addView(progressBar);
 

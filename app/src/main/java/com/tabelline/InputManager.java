@@ -1,7 +1,6 @@
 package com.tabelline;
 
 import android.os.Handler;
-import android.widget.ProgressBar;
 
 public class InputManager {
     public interface InputListener {
@@ -12,7 +11,7 @@ public class InputManager {
     private String currentInput = "";
     private Handler handler = new Handler();
     private InputListener listener;
-    private ProgressBar progressBar;
+    private VerticalProgressBar progressBar;
 
     private static final long MULTIPLY_DELAY = 700; // 0.7 secondi
     private static final long CONFIRM_DELAY = 700;  // 0.7 secondi
@@ -22,7 +21,7 @@ public class InputManager {
     private long timerDuration = 0;
     private boolean timerRunning = false;
 
-    public InputManager(InputListener listener, ProgressBar progressBar) {
+    public InputManager(InputListener listener, VerticalProgressBar progressBar) {
         this.listener = listener;
         this.progressBar = progressBar;
     }
