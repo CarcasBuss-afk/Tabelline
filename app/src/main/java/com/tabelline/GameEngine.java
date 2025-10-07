@@ -64,28 +64,61 @@ public class GameEngine {
         }
     }
 
-    // Controlla risposta e distrugge palline
-    public int checkAnswer(int inputFactor1, int inputFactor2) {
-        int inputResult = inputFactor1 * inputFactor2;
-        int destroyedCount = 0;
+    // Controlla risposta combo e distrugge palline
+    public ComboResult checkAnswer(ArrayList<Integer> factors) {
+        // Richiede almeno 2 fattori (una moltiplicazione)
+        if (factors.size() < 2) {
+            return new ComboResult(false, 0, 0);
+        }
 
-        Iterator<Ball> iterator = balls.iterator();
-        while (iterator.hasNext()) {
-            Ball ball = iterator.next();
-            if (ball.result == inputResult) {
-                iterator.remove();
-                destroyedCount++;
-                ballsDestroyed++;
-                score += 10;
+        // Calcola risultati progressivi
+        ArrayList<Integer> results = new ArrayList<>();
+        int currentResult = factors.get(0);
+        results.add(currentResult);
 
-                // Level up ogni 10 palline distrutte
-                if (ballsDestroyed % 10 == 0) {
-                    level++;
+        for (int i = 1; i < factors.size(); i++) {
+            currentResult = currentResult * factors.get(i);
+            results.add(currentResult);
+        }
+
+        // Verifica che TUTTE le palline con questi risultati esistano
+        ArrayList<Ball> ballsToDestroy = new ArrayList<>();
+        for (int result : results) {
+            Ball found = null;
+            for (Ball ball : balls) {
+                if (ball.result == result && !ballsToDestroy.contains(ball)) {
+                    found = ball;
+                    break;
                 }
+            }
+
+            if (found == null) {
+                // Combo fallita: manca una pallina
+                return new ComboResult(false, 0, 0);
+            }
+
+            ballsToDestroy.add(found);
+        }
+
+        // TUTTE le palline trovate → distruggi in ordine con punteggio esponenziale
+        int totalScore = 0;
+        for (int i = 0; i < ballsToDestroy.size(); i++) {
+            Ball ball = ballsToDestroy.get(i);
+            balls.remove(ball);
+            ballsDestroyed++;
+
+            // Punteggio: 1ª=10, 2ª=20, 3ª=40, 4ª=80 (formula: 10×2^i)
+            int points = 10 * (1 << i); // bit shift = 2^i
+            totalScore += points;
+            score += points;
+
+            // Level up ogni 10 palline distrutte
+            if (ballsDestroyed % 10 == 0) {
+                level++;
             }
         }
 
-        return destroyedCount;
+        return new ComboResult(true, ballsToDestroy.size(), totalScore);
     }
 
     public void reset() {

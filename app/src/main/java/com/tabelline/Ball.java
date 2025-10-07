@@ -19,9 +19,9 @@ public class Ball {
         this.x = startX;
         this.y = startY;
 
-        // Genera moltiplicazione casuale
-        this.factor1 = random.nextInt(maxNumber) + 1;
-        this.factor2 = random.nextInt(maxNumber) + 1;
+        // Genera moltiplicazione casuale (>=2 per escludere moltiplicazioni per 1 e numeri primi)
+        this.factor1 = random.nextInt(maxNumber - 1) + 2;
+        this.factor2 = random.nextInt(maxNumber - 1) + 2;
         this.result = factor1 * factor2;
 
         // Velocità casuale

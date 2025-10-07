@@ -1,20 +1,22 @@
 package com.tabelline;
 
 import android.os.Handler;
+import java.util.ArrayList;
 
 public class InputManager {
     public interface InputListener {
         void onInputChanged(String display);
-        void onAnswerSubmitted(int factor1, int factor2);
+        void onAnswerSubmitted(ArrayList<Integer> factors);
     }
 
-    private String currentInput = "";
+    private ArrayList<Integer> factors = new ArrayList<>();
+    private String currentFactor = "";
     private Handler handler = new Handler();
     private InputListener listener;
     private VerticalProgressBar progressBar;
 
-    private static final long MULTIPLY_DELAY = 700; // 0.7 secondi
-    private static final long CONFIRM_DELAY = 700;  // 0.7 secondi
+    private static final long FACTOR_DELAY = 700; // 0.7 secondi per finalizzare fattore
+    private static final long CONFIRM_DELAY = 700;  // 0.7 secondi per confermare
     private static final long PROGRESS_UPDATE_INTERVAL = 16; // ~60 FPS
 
     private long timerStartTime = 0;
@@ -26,13 +28,22 @@ public class InputManager {
         this.progressBar = progressBar;
     }
 
-    // Timer che aggiunge automaticamente ×
-    private Runnable multiplyRunnable = new Runnable() {
+    // Timer che finalizza il fattore corrente aggiungendo ×
+    private Runnable factorRunnable = new Runnable() {
         @Override
         public void run() {
-            if (!currentInput.contains("×") && !currentInput.isEmpty()) {
-                currentInput += "×";
-                notifyInputChanged();
+            if (!currentFactor.isEmpty()) {
+                try {
+                    int factor = Integer.parseInt(currentFactor);
+                    factors.add(factor);
+                    currentFactor = "";
+                    notifyInputChanged();
+                    // Avvia timer per confermare se non arrivano altri numeri
+                    startProgressAnimation(CONFIRM_DELAY);
+                    handler.postDelayed(confirmRunnable, CONFIRM_DELAY);
+                } catch (NumberFormatException e) {
+                    reset();
+                }
             }
         }
     };
@@ -41,7 +52,7 @@ public class InputManager {
     private Runnable confirmRunnable = new Runnable() {
         @Override
         public void run() {
-            if (currentInput.contains("×")) {
+            if (currentFactor.isEmpty() && !factors.isEmpty()) {
                 submitAnswer();
             }
         }
@@ -49,69 +60,81 @@ public class InputManager {
 
     public void addDigit(int digit) {
         // Cancella timer precedenti
-        handler.removeCallbacks(multiplyRunnable);
+        handler.removeCallbacks(factorRunnable);
         handler.removeCallbacks(confirmRunnable);
         stopProgressAnimation();
 
-        if (!currentInput.contains("×")) {
-            // Primo fattore
-            currentInput += digit;
-            notifyInputChanged();
-            // Avvia timer per aggiungere × e anima progress bar
-            startProgressAnimation(MULTIPLY_DELAY);
-            handler.postDelayed(multiplyRunnable, MULTIPLY_DELAY);
-        } else {
-            // Secondo fattore
-            currentInput += digit;
-            notifyInputChanged();
-            // Avvia timer per confermare e anima progress bar
-            startProgressAnimation(CONFIRM_DELAY);
-            handler.postDelayed(confirmRunnable, CONFIRM_DELAY);
-        }
+        // Aggiungi cifra al fattore corrente
+        currentFactor += digit;
+        notifyInputChanged();
+
+        // Avvia timer per finalizzare questo fattore
+        startProgressAnimation(FACTOR_DELAY);
+        handler.postDelayed(factorRunnable, FACTOR_DELAY);
     }
 
     public void reset() {
-        handler.removeCallbacks(multiplyRunnable);
+        handler.removeCallbacks(factorRunnable);
         handler.removeCallbacks(confirmRunnable);
         stopProgressAnimation();
-        currentInput = "";
+        factors.clear();
+        currentFactor = "";
         notifyInputChanged();
     }
 
     private void submitAnswer() {
-        if (!currentInput.contains("×")) {
+        if (factors.isEmpty()) {
             reset();
             return;
         }
 
-        try {
-            String[] parts = currentInput.split("×");
-            if (parts.length != 2) {
-                reset();
-                return;
-            }
-
-            int factor1 = Integer.parseInt(parts[0]);
-            int factor2 = Integer.parseInt(parts[1]);
-
-            listener.onAnswerSubmitted(factor1, factor2);
-            reset();
-        } catch (Exception e) {
-            reset();
-        }
+        listener.onAnswerSubmitted(new ArrayList<>(factors));
+        reset();
     }
 
     private void notifyInputChanged() {
-        String display = currentInput.isEmpty() ? "_" : currentInput + "_";
-        listener.onInputChanged(display);
+        StringBuilder display = new StringBuilder();
+
+        // Aggiungi fattori già confermati con ×
+        for (int i = 0; i < factors.size(); i++) {
+            if (i > 0) display.append("×");
+            display.append(factors.get(i));
+        }
+
+        // Aggiungi × prima del fattore corrente se ci sono già fattori
+        if (!factors.isEmpty() && !currentFactor.isEmpty()) {
+            display.append("×");
+        }
+
+        // Aggiungi fattore corrente
+        display.append(currentFactor);
+
+        // Aggiungi cursore
+        display.append("_");
+
+        listener.onInputChanged(display.toString());
     }
 
     public String getCurrentInput() {
-        return currentInput.isEmpty() ? "_" : currentInput + "_";
+        StringBuilder display = new StringBuilder();
+
+        for (int i = 0; i < factors.size(); i++) {
+            if (i > 0) display.append("×");
+            display.append(factors.get(i));
+        }
+
+        if (!factors.isEmpty() && !currentFactor.isEmpty()) {
+            display.append("×");
+        }
+
+        display.append(currentFactor);
+        display.append("_");
+
+        return display.toString();
     }
 
     public void cleanup() {
-        handler.removeCallbacks(multiplyRunnable);
+        handler.removeCallbacks(factorRunnable);
         handler.removeCallbacks(confirmRunnable);
         stopProgressAnimation();
     }

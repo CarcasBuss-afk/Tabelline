@@ -131,20 +131,39 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onAnswerSubmitted(int factor1, int factor2) {
-        int destroyedCount = gameView.getGameEngine().checkAnswer(factor1, factor2);
+    public void onAnswerSubmitted(java.util.ArrayList<Integer> factors) {
+        ComboResult result = gameView.getGameEngine().checkAnswer(factors);
 
-        // Feedback visivo (opzionale - puoi rimuovere se rallenta)
-        if (destroyedCount > 0) {
-            inputDisplay.setBackgroundColor(Color.parseColor("#27AE60")); // Verde
-            inputDisplay.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
-                }
-            }, 300);
+        // Feedback visivo
+        if (result.success) {
+            // Successo - Verde
+            inputDisplay.setBackgroundColor(Color.parseColor("#27AE60"));
+
+            // Mostra combo info se più di una pallina
+            if (result.ballsDestroyed > 1) {
+                final String comboText = "COMBO x" + result.ballsDestroyed + "! +" + result.totalScore;
+                inputDisplay.setText(comboText);
+
+                // Ritorna al cursore dopo 1 secondo
+                inputDisplay.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        inputDisplay.setText("_");
+                        inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
+                    }
+                }, 1000);
+            } else {
+                // Singola pallina - feedback breve
+                inputDisplay.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        inputDisplay.setBackgroundColor(Color.parseColor("#16213E"));
+                    }
+                }, 300);
+            }
         } else {
-            inputDisplay.setBackgroundColor(Color.parseColor("#E74C3C")); // Rosso
+            // Fallimento - Rosso
+            inputDisplay.setBackgroundColor(Color.parseColor("#E74C3C"));
             inputDisplay.postDelayed(new Runnable() {
                 @Override
                 public void run() {
