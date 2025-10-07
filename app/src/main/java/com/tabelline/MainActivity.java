@@ -83,7 +83,7 @@ public class MainActivity extends Activity
         keyboardContainerParams.setMargins(0, 0, 0, bottomMargin); // Margine ESTERNO bottom
         keyboardContainer.setLayoutParams(keyboardContainerParams);
 
-        // Progress bar verticale (lato sinistro, larghezza 3% dello schermo)
+        // Progress bar verticale (lato sinistro)
         final android.widget.ProgressBar progressBar = new android.widget.ProgressBar(
             this, null, android.R.attr.progressBarStyleHorizontal
         );
@@ -92,11 +92,17 @@ public class MainActivity extends Activity
         progressBar.setRotation(270); // Ruota 270° per renderla verticale
         progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#27AE60")));
         progressBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2C2C3E")));
+
+        // Dopo la rotazione: width diventa altezza visuale, height diventa larghezza visuale
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-            (int) (screenWidth * 0.03),
-            LinearLayout.LayoutParams.MATCH_PARENT
+            LinearLayout.LayoutParams.MATCH_PARENT, // Altezza visuale = altezza container
+            (int) (screenWidth * 0.05)               // Larghezza visuale = 5% schermo
         );
         progressBar.setLayoutParams(progressParams);
+
+        // Aumenta lo spessore minimo della barra
+        progressBar.setMinimumHeight((int) (screenWidth * 0.05));
+
         keyboardContainer.addView(progressBar);
 
         // Keyboard (usa MATCH_PARENT per riempire tutto lo spazio disponibile)
