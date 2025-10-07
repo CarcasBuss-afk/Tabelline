@@ -22,7 +22,7 @@ public class KeyboardView extends LinearLayout {
         this.listener = listener;
 
         setOrientation(LinearLayout.VERTICAL);
-        setGravity(Gravity.CENTER);
+        // Non usare Gravity.CENTER per evitare sbilanciamento con ProgressBar a sinistra
         setBackgroundColor(Color.parseColor("#2C2C3E"));
     }
 
