@@ -83,28 +83,29 @@ public class MainActivity extends Activity
         keyboardContainerParams.setMargins(0, 0, 0, bottomMargin); // Margine ESTERNO bottom
         keyboardContainer.setLayoutParams(keyboardContainerParams);
 
-        // Progress bar verticale custom (lato sinistro)
+        // Keyboard centrato con larghezza ridotta (70% dello spazio disponibile)
+        keyboard = new KeyboardView(this, this);
+        LinearLayout.LayoutParams keyboardParams = new LinearLayout.LayoutParams(
+            0,                                       // width = 0 (usa weight)
+            LinearLayout.LayoutParams.MATCH_PARENT,  // height = piena altezza
+            0.95f                                    // peso 95% (lascia 5% per progress bar)
+        );
+        keyboardContainer.addView(keyboard);
+
+        // Progress bar verticale custom (lato DESTRO per ergonomia)
         final VerticalProgressBar progressBar = new VerticalProgressBar(this);
         progressBar.setMax(100);
         progressBar.setProgress(0);
 
         // Layout params: width = spessore barra, height = altezza completa del container
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-            (int) (screenWidth * 0.05),              // width = 5% dello schermo (spessore)
-            LinearLayout.LayoutParams.MATCH_PARENT   // height = piena altezza del container
+            0,                                       // width = 0 (usa weight)
+            LinearLayout.LayoutParams.MATCH_PARENT,  // height = piena altezza
+            0.05f                                    // peso 5%
         );
         progressBar.setLayoutParams(progressParams);
 
         keyboardContainer.addView(progressBar);
-
-        // Keyboard (usa MATCH_PARENT per riempire tutto lo spazio disponibile)
-        keyboard = new KeyboardView(this, this);
-        LinearLayout.LayoutParams keyboardParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        keyboard.setLayoutParams(keyboardParams);
-        keyboardContainer.addView(keyboard);
 
         mainLayout.addView(keyboardContainer);
 

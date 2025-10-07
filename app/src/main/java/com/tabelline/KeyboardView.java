@@ -22,7 +22,7 @@ public class KeyboardView extends LinearLayout {
         this.listener = listener;
 
         setOrientation(LinearLayout.VERTICAL);
-        // Non usare Gravity.CENTER per evitare sbilanciamento con ProgressBar a sinistra
+        setGravity(Gravity.CENTER); // Centra la griglia per ergonomia
         setBackgroundColor(Color.parseColor("#2C2C3E"));
     }
 
@@ -51,13 +51,17 @@ public class KeyboardView extends LinearLayout {
     }
 
     private void createKeyboard(int width, int height) {
-        // Crea griglia 4x3 che riempie tutto lo spazio
+        // Crea griglia 4x3 ridotta per ergonomia (70% della larghezza disponibile)
         grid = new GridLayout(getContext());
         grid.setRowCount(4);
         grid.setColumnCount(3);
+
+        // Usa solo 70% della larghezza per tasti più piccoli e centrati
+        int usableWidth = (int) (width * 0.70);
+
         grid.setLayoutParams(new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.MATCH_PARENT
+            usableWidth,                             // Larghezza ridotta
+            LinearLayout.LayoutParams.MATCH_PARENT   // Altezza piena
         ));
 
         // Padding uniforme
@@ -67,8 +71,8 @@ public class KeyboardView extends LinearLayout {
         // Margine tra i tasti
         int margin = 8;
 
-        // Calcola dimensioni esatte per ogni cella
-        int buttonWidth = (width - (padding * 2) - (margin * 6)) / 3;
+        // Calcola dimensioni esatte per ogni cella (basato su larghezza ridotta)
+        int buttonWidth = (usableWidth - (padding * 2) - (margin * 6)) / 3;
         int buttonHeight = (height - (padding * 2) - (margin * 8)) / 4;
 
         // Layout tasti:
