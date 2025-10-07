@@ -33,22 +33,44 @@ public class GameEngine {
         return 20;
     }
 
-    // Calcola intervallo spawn in base al livello
+    // Calcola intervallo spawn in base al livello (spawn più frequenti ai livelli alti)
     public long getSpawnInterval() {
-        if (level <= 5) return 5000;  // 5 secondi
-        if (level <= 10) return 4000; // 4 secondi
-        if (level <= 15) return 3000; // 3 secondi
-        if (level <= 20) return 2000; // 2 secondi
-        return 1000; // 1 secondo
+        if (ballsDestroyed < 18) return 3000;  // Prime 18 palline: ogni 3 secondi
+        if (ballsDestroyed < 36) return 2500;  // Palline 19-36: ogni 2.5 secondi
+        if (ballsDestroyed < 60) return 2000;  // Palline 37-60: ogni 2 secondi
+        return 1500; // Oltre 60: ogni 1.5 secondi
     }
 
-    // Spawna nuova pallina se è passato abbastanza tempo
+    // Calcola quante palline spawnare contemporaneamente
+    public int getSpawnCount() {
+        if (ballsDestroyed < 6) return 1;      // Palline 1-6: singole
+        if (ballsDestroyed < 12) return 2;     // Palline 7-12: doppie
+        if (ballsDestroyed < 18) return 3;     // Palline 13-18: triple
+        if (ballsDestroyed < 36) return 4;     // Palline 19-36: quadruple
+        return 5; // Oltre 36: quintuple
+    }
+
+    // Spawna nuove palline se è passato abbastanza tempo
     public void trySpawnBall(long currentTime) {
         if (currentTime - lastSpawnTime >= getSpawnInterval()) {
-            float randomX = 100 + (float) Math.random() * (screenWidth - 200);
-            balls.add(new Ball(randomX, -100, getMaxNumber()));
+            int count = getSpawnCount();
+
+            // Spawna 'count' palline distanziate orizzontalmente
+            for (int i = 0; i < count; i++) {
+                float randomX = 100 + (float) Math.random() * (screenWidth - 200);
+                balls.add(new Ball(randomX, -100, getMaxNumber(), getSpeedMultiplier()));
+            }
+
             lastSpawnTime = currentTime;
         }
+    }
+
+    // Moltiplicatore velocità in base alle palline distrutte
+    public float getSpeedMultiplier() {
+        if (ballsDestroyed < 18) return 1.0f;   // Velocità normale
+        if (ballsDestroyed < 36) return 1.2f;   // +20%
+        if (ballsDestroyed < 60) return 1.5f;   // +50%
+        return 2.0f; // Oltre 60: doppia velocità
     }
 
     // Aggiorna posizione palline e controlla collisioni

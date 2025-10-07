@@ -15,7 +15,7 @@ public class Ball {
     public int radius = 60;
     public int color;
 
-    public Ball(float startX, float startY, int maxNumber) {
+    public Ball(float startX, float startY, int maxNumber, float speedMultiplier) {
         this.x = startX;
         this.y = startY;
 
@@ -24,8 +24,9 @@ public class Ball {
         this.factor2 = random.nextInt(maxNumber - 1) + 2;
         this.result = factor1 * factor2;
 
-        // Velocità casuale
-        this.speed = 2 + random.nextFloat() * 2; // 2-4 pixel/frame
+        // Velocità casuale con moltiplicatore progressivo
+        float baseSpeed = 2 + random.nextFloat() * 2; // 2-4 pixel/frame
+        this.speed = baseSpeed * speedMultiplier;
 
         // Colore casuale
         int[] colors = {
