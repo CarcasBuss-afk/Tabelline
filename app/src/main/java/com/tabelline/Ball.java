@@ -67,6 +67,7 @@ public class Ball {
     }
 
     public boolean reachedBottom(int gameAreaHeight) {
-        return y - radius >= gameAreaHeight;
+        // La parte inferiore della pallina è y + radius
+        return y + radius >= gameAreaHeight;
     }
 }

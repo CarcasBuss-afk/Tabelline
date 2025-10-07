@@ -115,8 +115,13 @@ public class MainActivity extends Activity
         // Inizializza InputManager con progress bar
         inputManager = new InputManager(this, progressBar);
 
-        // Avvia gioco
-        gameView.startGame();
+        // Avvia gioco DOPO che il layout è stato misurato
+        gameView.post(new Runnable() {
+            @Override
+            public void run() {
+                gameView.startGame();
+            }
+        });
     }
 
     // InputManager.InputListener
