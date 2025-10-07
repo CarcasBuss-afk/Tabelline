@@ -90,6 +90,7 @@ public class MainActivity extends Activity
             LinearLayout.LayoutParams.MATCH_PARENT,  // height = piena altezza
             0.95f                                    // peso 95% (lascia 5% per progress bar)
         );
+        keyboard.setLayoutParams(keyboardParams);    // IMPORTANTE: applica i params!
         keyboardContainer.addView(keyboard);
 
         // Progress bar verticale custom (lato DESTRO per ergonomia)
