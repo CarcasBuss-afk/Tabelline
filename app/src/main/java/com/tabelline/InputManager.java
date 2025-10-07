@@ -38,7 +38,9 @@ public class InputManager {
                     factors.add(factor);
                     currentFactor = "";
                     notifyInputChanged();
-                    // Avvia timer per confermare se non arrivano altri numeri
+
+                    // Ora che il fattore è finalizzato, avvia timer per conferma
+                    // Se l'utente digita di nuovo, questo verrà cancellato in addDigit()
                     startProgressAnimation(CONFIRM_DELAY);
                     handler.postDelayed(confirmRunnable, CONFIRM_DELAY);
                 } catch (NumberFormatException e) {
@@ -48,12 +50,15 @@ public class InputManager {
         }
     };
 
-    // Timer che conferma automaticamente
+    // Timer che conferma automaticamente (solo se almeno 2 fattori)
     private Runnable confirmRunnable = new Runnable() {
         @Override
         public void run() {
-            if (currentFactor.isEmpty() && !factors.isEmpty()) {
+            if (currentFactor.isEmpty() && factors.size() >= 2) {
                 submitAnswer();
+            } else if (currentFactor.isEmpty() && factors.size() == 1) {
+                // Se c'è solo 1 fattore, aspetta ancora (deve essere una moltiplicazione)
+                // Non fare nulla, aspetta che l'utente digiti il secondo fattore
             }
         }
     };
