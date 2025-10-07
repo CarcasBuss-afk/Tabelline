@@ -93,14 +93,16 @@ public class MainActivity extends Activity
         progressBar.setProgressTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#27AE60")));
         progressBar.setProgressBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#2C2C3E")));
 
-        // Dopo la rotazione: width diventa altezza visuale, height diventa larghezza visuale
+        // Layout params: width/height sono relativi al container, NON alla rotazione visuale
+        // width = spazio orizzontale nel container (deve essere piccolo per lasciare spazio alla tastiera)
+        // height = spazio verticale nel container (MATCH_PARENT per riempire tutta l'altezza)
         LinearLayout.LayoutParams progressParams = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, // Altezza visuale = altezza container
-            (int) (screenWidth * 0.05)               // Larghezza visuale = 5% schermo
+            (int) (screenWidth * 0.05),              // width = 5% per spessore barra
+            LinearLayout.LayoutParams.MATCH_PARENT   // height = piena altezza container
         );
         progressBar.setLayoutParams(progressParams);
 
-        // Aumenta lo spessore minimo della barra
+        // Aumenta lo spessore minimo della barra per renderla più visibile
         progressBar.setMinimumHeight((int) (screenWidth * 0.05));
 
         keyboardContainer.addView(progressBar);
